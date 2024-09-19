@@ -143,14 +143,14 @@ export default function SearchDocumentation() {
                 {
                   text: formatNumber(hit.meta?.favers),
                   icon: Icon.Star,
-                  tooltip: `${hit.meta?.favers} Stars`,
+                  tooltip: `${hit.meta?.favers} Stars`
                 },
                 {
                   text: formatNumber(hit.meta?.downloads),
                   icon: Icon.Download,  
-                  tooltip: `${hit.meta?.downloads} Downloads`,
-                },
-              ].filter((item) => item !== null) as ItemAccessory[]
+                  tooltip: `${hit.meta?.downloads} Downloads`
+                }
+              ] as ItemAccessory[]
             }
           />
         );
