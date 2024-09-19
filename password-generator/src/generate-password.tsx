@@ -1,13 +1,14 @@
 import {
-  Action,
-  ActionPanel,
-  Clipboard,
   Form,
-  PopToRootType,
   Toast,
-  getPreferenceValues,
+  Action,
   showHUD,
   showToast,
+  Clipboard,
+  ActionPanel,
+  PopToRootType,
+  getPreferenceValues,
+  openExtensionPreferences,
 } from "@raycast/api";
 
 import { generatePassword } from "@/helpers/helpers";
@@ -15,6 +16,7 @@ import { generatePassword } from "@/helpers/helpers";
 interface Preferences {
   hideAfterCopy: boolean;
   storePasswordLength: boolean;
+  poppingBackToRootType: PopToRootType;
 }
 
 interface Form {
@@ -25,6 +27,7 @@ interface Form {
 
 const handleGeneratePassword = (values: Form) => {
   const { hideAfterCopy } = getPreferenceValues<Preferences>();
+  const { poppingBackToRootType } = getPreferenceValues<Preferences>();
 
   const length = values.length;
   const lengthNumber = parseInt(length, 10);
@@ -54,7 +57,7 @@ const handleGeneratePassword = (values: Form) => {
   if (hideAfterCopy) {
     showHUD(`Copied Password - ${generatedPassword} 🎉`, {
       clearRootSearch: false,
-      popToRootType: PopToRootType.Suspended,
+      popToRootType:  poppingBackToRootType,
     });
   } else {
     showToast(Toast.Style.Success, "Copied Password 🎉", generatedPassword);
@@ -69,7 +72,8 @@ export default function Command() {
       navigationTitle="Password Generator"
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Generate Password" onSubmit={(values: Form) => handleGeneratePassword(values)} />
+          <Action.SubmitForm title="Generate" onSubmit={(values: Form) => handleGeneratePassword(values)} />
+          <Action title="Open Extension Preferences" onAction={openExtensionPreferences} />
         </ActionPanel>
       }
     >

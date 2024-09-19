@@ -23,20 +23,42 @@
       "preferences": [
         {
           "name": "hideAfterCopy",
-          "description": "Hide the raycast panel after it's copied to the clipboard.",
           "type": "checkbox",
-          "required": false,
-          "default": false,
           "title": "Options",
-          "label": "Hide Raycast after copy"
+          "label": "Hide Raycast after copy",
+          "default": false,
+          "required": false,
+          "description": "Hide the raycast panel after it's copied to the clipboard."
         },
         {
           "name": "storePasswordLength",
-          "description": "Persist the last password length between runs.",
           "type": "checkbox",
-          "required": false,
           "default": false,
-          "label": "Store password length"
+          "required": false,
+          "label": "Store password length",
+          "description": "Persist the last password length between runs."
+        },
+        {
+          "name": "poppingBackToRootType",
+          "type": "dropdown",
+          "title": "Pop to root search behavior",
+          "description": "Defines the pop to root behavior.",
+          "data": [
+            {
+              "title": "Default",
+              "value": "default"
+            },
+            {
+              "title": "Immediate",
+              "value": "immediate"
+            },
+            {
+              "title": "Suspended",
+              "value": "suspended"
+            }
+          ],
+          "required": true,
+          "default": "default"
         }
       ]
     }
