@@ -1,11 +1,10 @@
 import {
   Icon,
   List,
+  Toast,
+  Action,
   showToast,
-  ToastStyle,
-  ActionPanel,
-  OpenInBrowserAction,
-  CopyToClipboardAction,
+  ActionPanel
 } from "@raycast/api";
 import { useMemo, useState } from "react";
 import algoliaSearch from "algoliasearch/lite";
@@ -103,7 +102,7 @@ export default function SearchDocumentation() {
       setIsLoading(false);
     } catch (err: any) {
       setSearchResults([]);
-      await showToast(ToastStyle.Failure, "Error Searching Composer Packagist.", err.message);
+      await showToast(Toast.Style.Failure, "Error Searching Composer Packagist.", err.message);
       setIsLoading(false);
     }
   };
@@ -118,20 +117,20 @@ export default function SearchDocumentation() {
             subtitle={hit.description}
             actions={
               <ActionPanel title={hit.name}>
-                <CopyToClipboardAction
+                <Action.CopyToClipboard
                   content={getComposerRequireCommand(hit)}
                   title={"Copy Require Command"}
                 />
-                <CopyToClipboardAction
+                <Action.CopyToClipboard
                   content={getComposerRequireDevCommand(hit)}
                   title={"Copy Require Dev Command"}
                 />
-                <OpenInBrowserAction
+                <Action.OpenInBrowser
                   url={getPackagistPageURL(hit)}
                   title="Open Packagist in Browser"
                   shortcut={{ modifiers: ["cmd", "shift"], key: "return" }}
                 />
-                <OpenInBrowserAction
+                <Action.OpenInBrowser
                   url={hit.repository}
                   title="Open Repository in Browser"
                   shortcut={{ modifiers: ["cmd", "opt", "shift"], key: "return" }}
