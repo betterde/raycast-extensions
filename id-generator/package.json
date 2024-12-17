@@ -1,0 +1,117 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "id-generator",
+  "title": "ID Generator",
+  "description": "This is an ID generator that supports Snowflake ID and UUID.",
+  "icon": "extension-icon.png",
+  "author": "George",
+  "owner": "betterde",
+  "categories": [
+    "Developer Tools"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "snowflake-id-generator",
+      "title": "Snowflake ID Generator",
+      "subtitle": "Snowflake ID Generator",
+      "description": "Quickly generate a snowflake ID",
+      "mode": "no-view",
+      "preferences": [
+        {
+          "name": "hideAfterCopy",
+          "type": "checkbox",
+          "title": "Options",
+          "label": "Hide Raycast after copy",
+          "default": false,
+          "required": false,
+          "description": "Hide the raycast panel after it's copied to the clipboard."
+        },
+        {
+          "name": "poppingBackToRootType",
+          "type": "dropdown",
+          "title": "Pop to root search behavior",
+          "description": "Defines the pop to root behavior.",
+          "data": [
+            {
+              "title": "Default",
+              "value": "default"
+            },
+            {
+              "title": "Immediate",
+              "value": "immediate"
+            },
+            {
+              "title": "Suspended",
+              "value": "suspended"
+            }
+          ],
+          "required": true,
+          "default": "default"
+        }
+      ]
+    },
+    {
+      "name": "uuid-generator",
+      "title": "UUID Generator",
+      "subtitle": "UUID Generator",
+      "description": "Quickly generate a UUID",
+      "mode": "no-view",
+      "preferences": [
+        {
+          "name": "hideAfterCopy",
+          "type": "checkbox",
+          "title": "Options",
+          "label": "Hide Raycast after copy",
+          "default": false,
+          "required": false,
+          "description": "Hide the raycast panel after it's copied to the clipboard."
+        },
+        {
+          "name": "poppingBackToRootType",
+          "type": "dropdown",
+          "title": "Pop to root search behavior",
+          "description": "Defines the pop to root behavior.",
+          "data": [
+            {
+              "title": "Default",
+              "value": "default"
+            },
+            {
+              "title": "Immediate",
+              "value": "immediate"
+            },
+            {
+              "title": "Suspended",
+              "value": "suspended"
+            }
+          ],
+          "required": true,
+          "default": "default"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.88.3",
+    "@raycast/utils": "^1.17.0",
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "20.8.10",
+    "@types/react": "18.3.3",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
