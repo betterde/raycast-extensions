@@ -1,3 +1,3 @@
-# Snowflake ID
+# ID Generator
 
-The Snowflake ID generator.
+This is an ID generator that supports Snowflake ID and UUID.

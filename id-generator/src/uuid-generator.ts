@@ -1,11 +1,6 @@
-import {
-  showHUD,
-  Clipboard,
-  PopToRootType,
-  getPreferenceValues,
-} from "@raycast/api";
+import { showHUD, Clipboard, PopToRootType, getPreferenceValues } from "@raycast/api";
 
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 interface Preferences {
   hideAfterCopy: boolean;

@@ -1,9 +1,4 @@
-import {
-  showHUD,
-  Clipboard,
-  PopToRootType,
-  getPreferenceValues,
-} from "@raycast/api";
+import { showHUD, Clipboard, PopToRootType, getPreferenceValues } from "@raycast/api";
 
 interface Preferences {
   hideAfterCopy: boolean;
@@ -17,9 +12,9 @@ class Snowflake {
   private sequence: number;
   private lastTimestamp: number;
 
-  constructor(datacenterId: number, machineId: number, epoch: number = 1609459200000) {
-    this.datacenterId = datacenterId & 0x1F;
-    this.machineId = machineId & 0x3FF;
+  constructor(datacenterId: number, machineId: number, epoch: number = 1704067200000) {
+    this.datacenterId = datacenterId & 0x1f;
+    this.machineId = machineId & 0x3ff;
     this.epoch = epoch;
 
     this.sequence = 0;
@@ -28,15 +23,15 @@ class Snowflake {
 
   // 生成 Snowflake ID
   public generate(): string {
-    let timestamp = this._currentTimestamp();
-    
+    let timestamp = this.currentTimestamp();
+
     // 如果当前时间戳与上次生成的时间戳相同，则增加序列号
     if (timestamp === this.lastTimestamp) {
-      this.sequence = (this.sequence + 1) & 0xFFF;
+      this.sequence = (this.sequence + 1) & 0xfff;
       if (this.sequence === 0) {
         // 当前毫秒内序列号用完，等待下一毫秒
         while (timestamp === this.lastTimestamp) {
-          timestamp = this._currentTimestamp();
+          timestamp = this.currentTimestamp();
         }
       }
     } else {
@@ -46,15 +41,16 @@ class Snowflake {
     this.lastTimestamp = timestamp;
 
     // 使用 BigInt 处理 ID，确保生成 64 位的数值
-    const id = (BigInt(timestamp - this.epoch) << BigInt(22))
-      | (BigInt(this.datacenterId) << BigInt(17))
-      | (BigInt(this.machineId) << BigInt(12))
-      | BigInt(this.sequence);
+    const id =
+      (BigInt(timestamp - this.epoch) << BigInt(22)) |
+      (BigInt(this.datacenterId) << BigInt(17)) |
+      (BigInt(this.machineId) << BigInt(12)) |
+      BigInt(this.sequence);
 
     return id.toString();
   }
 
-  private _currentTimestamp(): number {
+  private currentTimestamp(): number {
     return new Date().getTime();
   }
 }
@@ -68,7 +64,7 @@ const { poppingBackToRootType } = getPreferenceValues<Preferences>();
 
 showHUD(`Copied Snowflake ID - ${id} 🎉`, {
   clearRootSearch: false,
-  popToRootType:  poppingBackToRootType,
+  popToRootType: poppingBackToRootType,
 });
 
 export default function Command() {

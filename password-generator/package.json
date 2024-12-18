@@ -4,8 +4,8 @@
   "title": "Password Generator",
   "description": "Generates a password from 5–64 characters with options for case, special characters, and more",
   "icon": "password-generator-icon.png",
-  "author": "betterde",
-  "owner": "George",
+  "author": "George",
+  "owner": "betterde",
   "contributors": [
     "George"
   ],

@@ -1,11 +1,14 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "id-generator",
-  "title": "ID Generator",
+  "title": "Id Generator",
   "description": "This is an ID generator that supports Snowflake ID and UUID.",
   "icon": "extension-icon.png",
   "author": "George",
   "owner": "betterde",
+  "contributors": [
+    "George"
+  ],
   "categories": [
     "Developer Tools"
   ],
@@ -13,9 +16,9 @@
   "commands": [
     {
       "name": "snowflake-id-generator",
-      "title": "Snowflake ID Generator",
-      "subtitle": "Snowflake ID Generator",
-      "description": "Quickly generate a snowflake ID",
+      "title": "Snowflake Id Generator",
+      "subtitle": "Snowflake Id Generator",
+      "description": "Quickly generate a snowflake Id",
       "mode": "no-view",
       "preferences": [
         {
@@ -53,9 +56,9 @@
     },
     {
       "name": "uuid-generator",
-      "title": "UUID Generator",
-      "subtitle": "UUID Generator",
-      "description": "Quickly generate a UUID",
+      "title": "Uuid Generator",
+      "subtitle": "Uuid Generator",
+      "description": "Quickly generate a Uuid",
       "mode": "no-view",
       "preferences": [
         {
