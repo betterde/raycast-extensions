@@ -25,7 +25,7 @@ const userURL = "/v2/user/";
 const extensionsURL = "/v2/extensions";
 const accessTokensURL = "/v2/access-tokens";
 
-const searchURL = "https://hub.docker.com/api/content/v1/products/search";
+const searchURL = "https://hub.docker.com/api/search/v4";
 export const TwoFactorDetailMessage = "Require secondary authentication on MFA enabled account";
 
 export class Hub {
@@ -169,17 +169,17 @@ export class Hub {
       signal,
     });
     const res = resp.data as SearchResponse;
-    if (!res.summaries) {
+    if (!res.results) {
       return res;
     }
-    res.summaries = res.summaries?.map((summary) => {
-      if (summary.filter_type === FilterTypeEnum.OFFICIAL) {
-        summary.url = `https://hub.docker.com/_/${summary.slug}`;
+    res.results = res.results?.map((result) => {
+      if (result.badge === FilterTypeEnum.OFFICIAL) {
+        result.url = `https://hub.docker.com/_/${result.slug}`;
       } else {
-        summary.url = `https://hub.docker.com/r/${summary.slug}`;
+        result.url = `https://hub.docker.com/r/${result.slug}`;
       }
-      summary.from = summary.filter_type.replace("_", " ").toUpperCase();
-      return summary;
+      result.from = result.badge.replace("_", " ").toUpperCase();
+      return result;
     });
     return res;
   }

@@ -17,8 +17,8 @@ export default function Search(props: { searchType: SearchTypeEnum }) {
       setLoading(true);
       try {
         const hub = new Hub();
-        const result = await hub.search({ q: text, page_size: 100, type: props.searchType }, abortCtrl.signal);
-        setImages(result.summaries ?? []);
+        const result = await hub.search({ query: text, page_size: 100, type: props.searchType }, abortCtrl.signal);
+        setImages(result.results ?? []);
       } catch (err) {
         showToast({
           style: Toast.Style.Failure,

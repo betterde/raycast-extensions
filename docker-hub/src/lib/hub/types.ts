@@ -115,7 +115,7 @@ export interface Summary {
   certification_status: string;
   star_count: number;
   pull_count: string;
-  filter_type: FilterType;
+  badge: FilterType;
   url?: string;
   from?: string;
 }
@@ -159,12 +159,8 @@ export enum FilterType {
 }
 
 export interface SearchResponse {
-  count: number;
-  summaries: Summary[] | null;
-  page: number;
-  page_size: number;
-  next: string;
-  previous: string;
+  total: number;
+  results: Summary[] | []
 }
 
 export enum FilterTypes {
@@ -188,7 +184,7 @@ export interface SearchParams {
   image_filter?: string;
   operating_system?: string;
   page_size: number;
-  q?: string;
+  query?: string;
   type?: SearchTypeEnum;
 }
 
