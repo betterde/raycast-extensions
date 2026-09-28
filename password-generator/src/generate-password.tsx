@@ -10,8 +10,15 @@ import {
   getPreferenceValues,
   openExtensionPreferences,
 } from "@raycast/api";
+import { useEffect, useState } from "react";
 
-import { generatePassword } from "@/helpers/helpers";
+import {
+  CHARACTER_TYPES,
+  DEFAULT_CHARACTER_TYPES,
+  CharacterType,
+  generatePassword,
+  getLengthError,
+} from "@/helpers/helpers";
 
 interface Preferences {
   hideAfterCopy: boolean;
@@ -19,72 +26,108 @@ interface Preferences {
   poppingBackToRootType: PopToRootType;
 }
 
-interface Form {
+interface FormValues {
   length: string;
-  useNumbers: 1 | 0;
-  useChars: 1 | 0;
+  characterTypes: CharacterType[];
+  excludeSimilar: boolean;
 }
 
-const handleGeneratePassword = (values: Form) => {
-  const { hideAfterCopy } = getPreferenceValues<Preferences>();
-  const { poppingBackToRootType } = getPreferenceValues<Preferences>();
-
-  const length = values.length;
-  const lengthNumber = parseInt(length, 10);
-
-  const useNumbers = Boolean(values.useNumbers);
-  const useChars = Boolean(values.useChars);
-
-  if (!Number.isFinite(lengthNumber)) {
-    showToast(Toast.Style.Failure, "Password length must be a number");
-    return;
-  }
-
-  if (lengthNumber < 5) {
-    showToast(Toast.Style.Failure, "Password length must be greater than 4");
-    return;
-  }
-
-  if (lengthNumber > 64) {
-    showToast(Toast.Style.Failure, "Password length must be less than 65");
-    return;
-  }
-
-  const generatedPassword = generatePassword(lengthNumber, useNumbers, useChars);
-
-  Clipboard.copy(generatedPassword);
-
-  if (hideAfterCopy) {
-    showHUD(`Copied Password - ${generatedPassword} 🎉`, {
-      clearRootSearch: false,
-      popToRootType:  poppingBackToRootType,
-    });
-  } else {
-    showToast(Toast.Style.Success, "Copied Password 🎉", generatedPassword);
-  }
-};
-
 export default function Command() {
-  const { storePasswordLength } = getPreferenceValues<Preferences>();
+  const { hideAfterCopy, storePasswordLength, poppingBackToRootType } = getPreferenceValues<Preferences>();
+  const [length, setLength] = useState("16");
+  const [characterTypes, setCharacterTypes] = useState<CharacterType[]>(DEFAULT_CHARACTER_TYPES);
+  const [excludeSimilar, setExcludeSimilar] = useState(true);
+  const [password, setPassword] = useState("");
+  const [lengthError, setLengthError] = useState<string>();
+  const characterTypesError = characterTypes.length === 0 ? "Choose at least one character type" : undefined;
+  const validLength = !getLengthError(length);
+
+  useEffect(() => {
+    setPassword(
+      validLength && characterTypes.length > 0 ? generatePassword(Number(length), characterTypes, excludeSimilar) : "",
+    );
+  }, [length, validLength, characterTypes, excludeSimilar]);
+
+  async function handleGeneratePassword(values: FormValues) {
+    const error = getLengthError(values.length);
+    setLengthError(error);
+    if (error || values.characterTypes.length === 0) return;
+
+    const generatedPassword = generatePassword(Number(values.length), values.characterTypes, values.excludeSimilar);
+    setPassword(generatedPassword);
+
+    try {
+      await Clipboard.copy(generatedPassword);
+      if (hideAfterCopy) {
+        await showHUD("Password copied", {
+          clearRootSearch: false,
+          popToRootType: poppingBackToRootType,
+        });
+      } else {
+        await showToast(Toast.Style.Success, "Password copied");
+      }
+    } catch {
+      await showToast(Toast.Style.Failure, "Could not copy password", "Try Generate again");
+    }
+  }
+
+  const selectedLabels = CHARACTER_TYPES.filter((type) => characterTypes.includes(type.value)).map(
+    (type) => type.title,
+  );
 
   return (
     <Form
       navigationTitle="Password Generator"
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Generate" onSubmit={(values: Form) => handleGeneratePassword(values)} />
+          <Action.SubmitForm title="Generate" onSubmit={handleGeneratePassword} />
           <Action title="Open Extension Preferences" onAction={openExtensionPreferences} />
         </ActionPanel>
       }
     >
       <Form.TextField
         id="length"
-        title="Enter password length (number of characters):"
-        placeholder="Enter a number between 5 and 64"
+        placeholder="Password length · 5–64 characters"
+        value={length}
         storeValue={storePasswordLength}
+        autoFocus
+        error={lengthError}
+        onChange={(value) => {
+          setLength(value);
+          setLengthError(undefined);
+        }}
+        onFocus={(event) => {
+          // Keep the preview in sync with lengths restored by Raycast's storeValue.
+          if (event.target.value !== undefined) setLength(event.target.value);
+        }}
+        onBlur={(event) => setLengthError(getLengthError(event.target.value ?? ""))}
       />
-      <Form.Checkbox id="useNumbers" label="Use numbers?" defaultValue={true} />
-      <Form.Checkbox id="useChars" label="Use special characters?" defaultValue={false} />
+      <Form.TagPicker
+        id="characterTypes"
+        placeholder="Choose character types"
+        value={characterTypes}
+        error={characterTypesError}
+        onChange={(values) =>
+          setCharacterTypes(CHARACTER_TYPES.filter((type) => values.includes(type.value)).map((type) => type.value))
+        }
+      >
+        {CHARACTER_TYPES.map((type) => (
+          <Form.TagPicker.Item key={type.value} value={type.value} title={type.title} />
+        ))}
+      </Form.TagPicker>
+      <Form.Checkbox
+        id="excludeSimilar"
+        label="Exclude similar characters: 0 O o 1 l I"
+        value={excludeSimilar}
+        onChange={setExcludeSimilar}
+      />
+      <Form.Separator />
+      <Form.Description
+        text={`${password || "Enter a valid length and choose a character type to preview your password."}`}
+      />
+      <Form.Description
+        text={password ? `${Number(length)} characters · ${selectedLabels.join(" · ")}` : "5–64 characters · At least one character type"}
+      />
     </Form>
   );
 }

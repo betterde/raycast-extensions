@@ -22,6 +22,27 @@ Visit [https://developers.raycast.com](https://developers.raycast.com) to get st
 
 Be sure to read and follow our [Community](https://manual.raycast.com/community-guidelines) and [Extension](https://manual.raycast.com/extensions) guidelines when submitting your extension and interacting with other folks in this repository.
 
+## Rebuild Local Extensions
+
+If a locally imported command shows `Missing executable. You might need to build
+the extension.`, rebuild its compiled entry points. From the repository root,
+run the following to rebuild every extension in this checkout:
+
+```sh
+for extension in composer-packagist docker-hub id-generator password-generator sentry; do
+  npm --prefix "$extension" run build || break
+done
+```
+
+On macOS, these builds write the command files to
+`~/.config/raycast/extensions/<extension-name>/`. Reopen the affected command in
+Raycast after a successful build.
+
+For a fresh checkout, or if installed dependencies no longer match the lockfile,
+run `npm ci` inside the affected extension directory before building. To import
+an extension for the first time, run `npm run dev` in that directory; it builds,
+imports, and watches the extension until you stop it with Ctrl+C.
+
 ## Feedback
 
 Raycast wouldn't be where it is without the feedback from our community, so we would be happy to hear what you think of the API / DevX and how we can improve. Please use [GitHub issues](https://github.com/raycast/extensions/issues/new/choose) for everything API related (bugs, improvements suggestions, developer experience, docs, etc). We have a few [templates](https://developers.raycast.com/examples) that should help you get started.
